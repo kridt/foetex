@@ -1,8 +1,9 @@
-var Coworker = require("./coworker.model")
+var Coworker = require("./coworker.model");
+var auth = require("./auth-middleware");
 
 module.exports = function(app) {
     //create coworker
-    app.post("/api/v1/coworkers", function(request, response, next){
+    app.post("/api/v1/coworkers", auth, function(request, response, next){
         try {
            var coworker = new Coworker({
                 name: request.fields.name,
@@ -53,7 +54,7 @@ module.exports = function(app) {
     });
 
     //update coworker info
-    app.patch("/api/v1/coworkers/:id", async function(request, response, next) {
+    app.patch("/api/v1/coworkers/:id", auth, async function(request, response, next) {
         try {
             var { name, sallingID } = request.fields;
             var updateObject = {};
@@ -75,7 +76,7 @@ module.exports = function(app) {
     });
 
     //delete a coworker
-    app.delete("/api/v1/coworkers/:id", async function(request, response, next){
+    app.delete("/api/v1/coworkers/:id", auth, async function(request, response, next){
         try {
             await Coworker.findByIdAndRemove(request.params.id);
             response.status(200)
