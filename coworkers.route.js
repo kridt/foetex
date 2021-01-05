@@ -6,7 +6,8 @@ module.exports = function(app) {
         try {
            var coworker = new Coworker({
                 name: request.fields.name,
-                sallingID: request.fields.sallingID
+                sallingID: request.fields.sallingID,
+                department: request.fields.department
             }).save();
 
             response.status(201)
@@ -20,7 +21,15 @@ module.exports = function(app) {
     app.get("/api/v1/coworkers", async function(request, response, next) {
         try {
             var result = await Coworker.find();
-            response.json(result);
+
+            var output = {
+                count: result.length,
+                next: `${request.protocol}://${request.hostname}${ request.hostname == "localhost" ? ":" + process.env.PORT : "" }${ request.url }?offset=20`,
+                previous: null,
+                url: `${request.protocol}://${request.hostname}${ request.hostname == "localhost" ? ":" + process.env.PORT : "" }${ request.url }`,
+                results: result
+            }
+            response.json(output);
         } catch (error) {
             return next(error)
         }
@@ -50,7 +59,8 @@ module.exports = function(app) {
             var updateObject = {};
 
             if (name) updateObject.name = name;
-            if (sallingID) updateObject.sallingID =sallingID;
+            if (sallingID) updateObject.sallingID = sallingID;
+            if (department) updateObject.department = department;
 
             await Coworker.findByIdAndUpdate(request.params.id, updateObject);
             
