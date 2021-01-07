@@ -92,8 +92,11 @@ module.exports = function(app) {
         try {
            var vote = new Vote({
                 vote: request.fields.vote,
-                voter: request.fields.voter
+                voter: request.fields.voter,
+                
             }).save();
+
+            console.log(request.fields);
 
             response.status(201)
             response.json(vote);
@@ -116,4 +119,15 @@ module.exports = function(app) {
             return next(error)
         }
     });
+
+    //delete a vote
+    app.delete("/api/v1/votes/:id", auth, async function(request, response, next){
+        try {
+            await Vote.findByIdAndRemove(request.params.id);
+            response.status(200)
+            response.end();
+        } catch (error) {
+            return next(error)
+        }
+    })
 };

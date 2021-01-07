@@ -1,7 +1,7 @@
 var { Schema, model, SchemaTypes } = require("mongoose");
 
 var Vote = new Schema({
-    name: SchemaTypes.String,
+    vote: SchemaTypes.String,
     voter: SchemaTypes.Decimal128
 });
 
