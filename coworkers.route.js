@@ -1,4 +1,5 @@
 var Coworker = require("./coworker.model");
+var Vote = require("./vote.model");
 var auth = require("./auth-middleware");
 
 module.exports = function(app) {
@@ -28,7 +29,7 @@ module.exports = function(app) {
                 next: `${request.protocol}://${request.hostname}${ request.hostname == "localhost" ? ":" + process.env.PORT : "" }${ request.url }?offset=20`,
                 previous: null,
                 url: `${request.protocol}://${request.hostname}${ request.hostname == "localhost" ? ":" + process.env.PORT : "" }${ request.url }`,
-                results: result
+                results: result,
             }
             response.json(output);
         } catch (error) {
@@ -86,4 +87,33 @@ module.exports = function(app) {
         }
     })
 
+    //Create a vote
+    app.post("/api/v1/votes", function(request, response, next){
+        try {
+           var vote = new Vote({
+                vote: request.fields.vote,
+                voter: request.fields.voter
+            }).save();
+
+            response.status(201)
+            response.json(vote);
+        } catch (error) {
+            return next(error)
+        }
+    })
+
+    //get all votes
+    app.get("/api/v1/votes", async function(request, response, next) {
+        try {
+            var vote_result = await Vote.find();
+
+            var output = {
+                count: vote_result.length,
+                voting: vote_result
+            }
+            response.json(output);
+        } catch (error) {
+            return next(error)
+        }
+    });
 };
