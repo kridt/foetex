@@ -4,7 +4,7 @@ var auth = require("./auth-middleware");
 
 module.exports = function(app) {
     //create coworker
-    app.post("/api/v1/coworkers", auth, function(request, response, next){
+    app.post("/api/v1/coworkers", function(request, response, next){
         try {
            var coworker = new Coworker({
                 name: request.fields.name,
@@ -77,7 +77,7 @@ module.exports = function(app) {
     });
 
     //delete a coworker
-    app.delete("/api/v1/coworkers/:id", auth, async function(request, response, next){
+    app.delete("/api/v1/coworkers/:id", async function(request, response, next){
         try {
             await Coworker.findByIdAndRemove(request.params.id);
             response.status(200)
@@ -93,18 +93,21 @@ module.exports = function(app) {
            var vote = new Vote({
                 vote: request.fields.vote,
                 voter: request.fields.voter,
+                message: request.fields.message,
                 
             }).save();
+            setTimeout(function() {
+                console.log();
 
-            console.log(request.fields);
-
+            }, 1000)
+            
             response.status(201)
             response.json(vote);
         } catch (error) {
             return next(error)
         }
     })
-
+    
     //get all votes
     app.get("/api/v1/votes", async function(request, response, next) {
         try {
@@ -120,14 +123,5 @@ module.exports = function(app) {
         }
     });
 
-    //delete a vote
-    app.delete("/api/v1/votes/:id", auth, async function(request, response, next){
-        try {
-            await Vote.findByIdAndRemove(request.params.id);
-            response.status(200)
-            response.end();
-        } catch (error) {
-            return next(error)
-        }
-    })
+    
 };
