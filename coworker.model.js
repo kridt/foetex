@@ -2,7 +2,7 @@ var { Schema, model, SchemaTypes } = require("mongoose");
 
 var Coworker = new Schema({
     name: SchemaTypes.String,
-    sallingID: SchemaTypes.Decimal128,
+    sallingID: SchemaTypes.String,
     department: SchemaTypes.String
 });
 
