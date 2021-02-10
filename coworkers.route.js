@@ -9,7 +9,7 @@ module.exports = function(app) {
            var coworker = new Coworker({
                 name: request.fields.name,
                 sallingID: request.fields.sallingID,
-                department: request.fields.department
+                department: request.fields.department,
             }).save();
 
             response.status(201)
@@ -94,6 +94,7 @@ module.exports = function(app) {
                 vote: request.fields.vote,
                 voter: request.fields.voter,
                 message: request.fields.message,
+                count: +1,
                 
             }).save();
             setTimeout(function() {
