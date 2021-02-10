@@ -94,7 +94,7 @@ module.exports = function(app) {
                 vote: request.fields.vote,
                 voter: request.fields.voter,
                 message: request.fields.message,
-                count: +1,
+    
                 
             }).save();
             setTimeout(function() {
