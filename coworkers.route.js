@@ -86,6 +86,18 @@ module.exports = function(app) {
             return next(error)
         }
     })
+    
+    
+    //delete a vote
+    app.delete("/api/v1/votes/:id", async function(request, response, next){
+        try {
+            await Vote.findByIdAndRemove(request.params.id);
+            response.status(200)
+            response.end();
+        } catch (error) {
+            return next(error)
+        }
+    })
 
     //Create a vote
     app.post("/api/v1/votes", function(request, response, next){
