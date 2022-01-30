@@ -98,6 +98,16 @@ module.exports = function(app) {
             return next(error)
         }
     })
+    //delete a vote
+    app.delete("/api/v1/hvidorevejVotes/:id", async function(request, response, next){
+        try {
+            await Vote.findByIdAndRemove(request.params.id);
+            response.status(200)
+            response.end();
+        } catch (error) {
+            return next(error)
+        }
+    })
 
     //Create a vote
     app.post("/api/v1/votes", function(request, response, next){
@@ -120,9 +130,44 @@ module.exports = function(app) {
             return next(error)
         }
     })
+    //Create a vote
+    app.post("/api/v1/hvidorevejVotes", function(request, response, next){
+        try {
+           var vote = new Vote({
+                vote: request.fields.vote,
+                voter: request.fields.voter,
+                message: request.fields.message,
+    
+                
+            }).save();
+            setTimeout(function() {
+                console.log();
+
+            }, 1000)
+            
+            response.status(201)
+            response.json(vote);
+        } catch (error) {
+            return next(error)
+        }
+    })
     
     //get all votes
     app.get("/api/v1/votes", async function(request, response, next) {
+        try {
+            var vote_result = await Vote.find();
+
+            var output = {
+                count: vote_result.length,
+                voting: vote_result
+            }
+            response.json(output);
+        } catch (error) {
+            return next(error)
+        }
+    });
+    //get all votes
+    app.get("/api/v1/hvidorevejVotes", async function(request, response, next) {
         try {
             var vote_result = await Vote.find();
 
